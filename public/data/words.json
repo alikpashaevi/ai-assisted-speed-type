@@ -1,0 +1,23 @@
+{
+  "lowercase":[
+    "apple", "banana", "cat", "dog", "elephant", "frog", "giraffe", "house", "ice", "jungle",
+    "kangaroo", "lion", "mountain", "notebook", "ocean", "penguin", "queen", "rainbow", "sun", "tree",
+    "umbrella", "vase", "window", "xylophone", "yellow", "zebra", "airplane", "balloon", "candle", "dolphin",
+    "eagle", "fish", "guitar", "hat", "island", "jacket", "kite", "lamp", "moon", "nest",
+    "octopus", "pencil", "quilt", "robot", "star", "telephone", "unicorn", "violin", "whale", "yacht",
+    "zebra", "avocado", "blue", "carrot", "dance", "elephant", "flower", "gold", "hippo", "icecream",
+    "jelly", "key", "lemon", "mango", "night", "orange", "piano", "queen", "rose", "sunflower",
+    "train", "universe", "volcano", "watermelon", "x-ray", "yogurt", "zoo", "ant", "boat", "cloud",
+    "duck", "earth", "flute", "globe", "honey", "igloo", "jellyfish", "koala", "leaf", "mirror",
+    "needle", "owl", "peach", "quokka", "rocket", "ship", "tiger", "unicycle", "violet", "wind",
+    "xenon", "yak", "zebra", "actor", "bicycle", "castle", "drum", "egg", "fox", "garden",
+    "helicopter", "iguana", "jungle", "kite", "leopard", "music", "nest", "oyster", "parrot", "quiver",
+    "river", "sand", "tulip", "umbrella", "vulture", "wheat", "xylophone", "yak", "zeppelin", "anchor",
+    "bridge", "cave", "desert", "elevator", "feather", "gorilla", "harp", "iceberg", "jungle", "kettle",
+    "lighthouse", "mountain", "night", "oasis", "pyramid", "quartz", "rabbit", "sphinx", "tornado", "unicorn",
+    "volcano", "wizard", "xylophone", "yarn", "zeppelin", "aroma", "bucket", "coin", "diamond", "eggplant",
+    "flamingo", "giraffe", "harmonica", "insect", "jacket", "kaleidoscope", "leopard", "microscope", "nebula", "orchestra",
+    "pearl", "quilt", "rhinoceros", "sword", "telescope", "umbrella", "vampire", "whistle", "xylophone", "yak",
+    "zephyr", "antelope", "bubble", "clown", "dinosaur", "eclipse", "fern", "galaxy", "hummingbird", "infinity"
+  ]
+}
