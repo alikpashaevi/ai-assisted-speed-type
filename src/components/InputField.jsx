@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 
-function InputArea({ checkWord }) {
+function InputArea({ checkWord, checkLetter }) {
   const [inputText, setInputText] = useState('');
 
   function handleChange(event) {
     const newValue = event.target.value;
     setInputText(newValue);
 
+    if (newValue.length > 0) {
+      checkLetter(newValue[newValue.length - 1]);
+    }
+
     if (newValue.slice(-1) === ' ') {
-      checkWord(newValue);
+      checkWord(newValue.trim());
       setInputText('');
     }
   }

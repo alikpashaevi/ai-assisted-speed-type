@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import Words from './components/Words';
-import InputArea from './components/InputField';
+import React from 'react';
+import { createBrowserRouter, Route, createRoutesFromElements, RouterProvider } from 'react-router-dom'
+import MainPage from './pages/MainPage';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<MainPage />} />
+  )
+)
 
 const App = () => {
-  const [words, setWords] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    fetch('data/words.json')
-      .then((response) => response.json())
-      .then((data) => setWords(data.lowercase))
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
-
-  const checkWord = (inputWord) => {
-    if (words[currentIndex] === inputWord.trim()) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-    }
+    return (
+      <RouterProvider router={router} />
+    );
   };
-
-  return (
-    <div>
-      <Words words={words} currentIndex={currentIndex} />
-      <InputArea checkWord={checkWord} />
-    </div>
-  );
-};
 
 export default App;
