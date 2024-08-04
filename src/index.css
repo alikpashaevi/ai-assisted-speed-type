@@ -3,3 +3,14 @@
   --color-secondary: #d2d4de;
   --color-third: #84a0c6;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: var(--bg-color);
+}
