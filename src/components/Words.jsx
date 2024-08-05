@@ -1,8 +1,9 @@
 import React from 'react';
+import './Words.css';
 
 const Words = ({ words, currentIndex, letterIndex, inputError, wordStatus }) => {
   return (
-    <div>
+    <div className='words-component'>
       <h1>Words List</h1>
       <div className="word-list">
       {words.map((word, index) => {
@@ -22,7 +23,7 @@ const Words = ({ words, currentIndex, letterIndex, inputError, wordStatus }) => 
           }
 
           return (
-            <span
+            <span className='word'
               key={index}
               style={{
                 backgroundColor,

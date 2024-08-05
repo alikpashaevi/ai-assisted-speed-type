@@ -50,7 +50,7 @@ const MainPage = () => {
   };
 
   return (
-    <div>
+    <div className='main-page'>
       <Words
         words={words}
         currentIndex={currentIndex}
