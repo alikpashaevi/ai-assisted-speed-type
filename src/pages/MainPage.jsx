@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Words from '../components/Words';
 import InputArea from '../components/InputField';
-import  './MainPage.css';
+import './MainPage.css';
+import Timer from '../components/Timer';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const [words, setWords] = useState([]);
@@ -11,13 +13,39 @@ const MainPage = () => {
   const [correctWords, setCorrectWords] = useState(0);
   const [incorrectWords, setIncorrectWords] = useState(0);
   const [wordStatus, setWordStatus] = useState([]); // Array to track correctness of words
+  const [time, setTime] = useState(2);
+  const [isTimerRunning, setIsTimerRunning] = useState(false); // State to track timer start
+
+  const navigate = useNavigate(); // React Router's navigation hook
 
   useEffect(() => {
     fetch('data/words.json')
       .then((response) => response.json())
-      .then((data) => setWords(data.lowercase))
+      .then((data) => {
+        const shuffledWords = data.lowercase.sort(() => Math.random() - 0.5);
+        setWords(shuffledWords);
+      })
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
+  
+
+  useEffect(() => {
+    let timer;
+    if (isTimerRunning && time > 0) {
+      timer = setTimeout(() => {
+        setTime(time - 1);
+      }, 1000);
+    } else if (time === 0) {
+      navigate('/timesup'); // Pass the wpm to the TimesUpPage
+    }
+    return () => clearTimeout(timer);
+  }, [isTimerRunning, time, correctWords, incorrectWords, navigate]);
+
+  const startTimer = () => {
+    if (!isTimerRunning) {
+      setIsTimerRunning(true);
+    }
+  };
 
   const checkWord = (inputWord) => {
     if (words[currentIndex] === inputWord.trim()) {
@@ -31,10 +59,10 @@ const MainPage = () => {
     }
     setCurrentIndex((prevIndex) => prevIndex + 1);
     setLetterIndex(0); // Reset letter index for next word
-
   };
 
   const checkLetter = (inputLetter) => {
+    startTimer(); // Start timer when the first letter is entered
     if (inputLetter === words[currentIndex][letterIndex]) {
       setLetterIndex((prevIndex) => prevIndex + 1);
       setInputError(false); // Correct letter, no error
@@ -51,6 +79,7 @@ const MainPage = () => {
 
   return (
     <div className='main-page'>
+      <Timer time={time} />
       <Words
         words={words}
         currentIndex={currentIndex}
@@ -63,6 +92,6 @@ const MainPage = () => {
       <div>Incorrect Words: {incorrectWords}</div>
     </div>
   );
-}
+};
 
 export default MainPage;
