@@ -2,7 +2,7 @@
   padding: 20px 10px;
   border-radius: 10px;
   margin-bottom: 10px;
-
+  user-select:none;
 }
 
 .words-component > h1 {

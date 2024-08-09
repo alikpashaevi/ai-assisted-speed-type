@@ -8,9 +8,10 @@ function InputArea({ checkWord, checkLetter }) {
     const newValue = event.target.value;
     setInputText(newValue);
 
-    if (newValue.length > 0) {
-      checkLetter(newValue[newValue.length - 1]);
-    }
+    const isBackspace = event.nativeEvent.inputType === 'deleteContentBackward';
+
+    
+    checkLetter(newValue[newValue.length - 1], isBackspace);
 
     if (newValue.slice(-1) === ' ') {
       checkWord(newValue.trim());
@@ -20,7 +21,7 @@ function InputArea({ checkWord, checkLetter }) {
 
   return (
     <div className="form">
-      <input onChange={handleChange} type="text" value={inputText}  />
+      <input id='input' onChange={handleChange} type="text" value={inputText}  />
     </div>
   );
 }

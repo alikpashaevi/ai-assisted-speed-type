@@ -17,11 +17,11 @@ const MainPage = () => {
   const [inputError, setInputError] = useState(false);
   const [correctWords, setCorrectWords] = useState(0);
   const [incorrectWords, setIncorrectWords] = useState(0);
-  const [wordStatus, setWordStatus] = useState([]); // Array to track correctness of words
-  const [time, setTime] = useState(60);
-  const [isTimerRunning, setIsTimerRunning] = useState(false); // State to track timer start
+  const [wordStatus, setWordStatus] = useState([]); 
+  const [time, setTime] = useState(290);
+  const [isTimerRunning, setIsTimerRunning] = useState(false); 
 
-  const navigate = useNavigate(); // React Router's navigation hook
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     fetch('data/words.json')
@@ -41,7 +41,7 @@ const MainPage = () => {
         setTime(time - 1);
       }, 1000);
     } else if (time === 0) {
-      navigate('/timesup'); // Pass the wpm to the TimesUpPage
+      navigate('/timesup', { state: { wpm: 20} });
     }
     return () => clearTimeout(timer);
   }, [isTimerRunning, time, correctWords, incorrectWords, navigate]);
@@ -62,24 +62,38 @@ const MainPage = () => {
       setInputError(true);
       setWordStatus((prevStatus) => [...prevStatus, 'incorrect']);
     }
+    setInputError(false);
     setCurrentIndex((prevIndex) => prevIndex + 1);
-    setLetterIndex(0); // Reset letter index for next word
+    setLetterIndex(0); 
   };
 
-  const checkLetter = (inputLetter) => {
-    startTimer(); // Start timer when the first letter is entered
-    if (inputLetter === words[currentIndex][letterIndex]) {
-      setLetterIndex((prevIndex) => prevIndex + 1);
-      setInputError(false); // Correct letter, no error
-    } else {
-      setInputError(true); // Incorrect letter, set error state
-      if (letterIndex === words[currentIndex].length - 1) {
-        setLetterIndex(0); // Reset letter index for next word
-        setInputError(false);
-      } else {
-        setLetterIndex((prevIndex) => prevIndex + 1);
-      }
-    }
+  const checkLetter = (inputLetter, isBackspace) => {
+
+    startTimer(); 
+    const input = document.getElementById('input');
+    const inputValue = input.value;
+    console.log(inputValue, words[currentIndex]);
+    setInputError(!words[currentIndex].startsWith(inputValue));
+    // let newLetterIndex = letterIndex;
+    // console.log(inputLetter, currentIndex, newLetterIndex, words[currentIndex][newLetterIndex]);
+    // if (isBackspace) {
+    //   setLetterIndex((prevIndex) => prevIndex - 1);
+    //   newLetterIndex--;
+    //   return;
+    // }
+    // if (inputLetter === words[currentIndex][newLetterIndex]) {
+    //   setLetterIndex((prevIndex) => prevIndex + 1);
+    //   setInputError(false); 
+    // } else {
+    //   console.log("Incorrect letter");
+    //   setInputError(true); 
+    //   if (newLetterIndex === words[currentIndex].length - 1) {
+    //     // setLetterIndex(0);
+    //     // setInputError(false);
+    //   } else {
+    //     setLetterIndex((prevIndex) => prevIndex + 1);
+    //   }
+    // }
   };
 
   const restartFunc = () => {
@@ -100,7 +114,6 @@ const MainPage = () => {
       })
       .catch((error) => console.error('Error fetching data:', error));
   };
-
   return (
     <div className='main-page'>
       <Header />
@@ -110,7 +123,7 @@ const MainPage = () => {
             currentIndex={currentIndex}
             letterIndex={letterIndex}
             inputError={inputError}
-            wordStatus={wordStatus} // Pass the wordStatus to Words component
+            wordStatus={wordStatus} 
           />
           <div className="input-area">
             <Timer time={time} />

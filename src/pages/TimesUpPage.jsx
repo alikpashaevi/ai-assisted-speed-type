@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const TimesUpPage = () => {
   const location = useLocation();
-  const { wpm } = location.state || {}; // Extract wpm from location.state
+  const { wpm } = location.state || {}; 
 
   return (
     <div>
