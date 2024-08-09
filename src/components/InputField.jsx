@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './InputField.css';
 
 function InputArea({ checkWord, checkLetter }) {
   const [inputText, setInputText] = useState('');
@@ -19,7 +20,7 @@ function InputArea({ checkWord, checkLetter }) {
 
   return (
     <div className="form">
-      <input onChange={handleChange} type="text" value={inputText} />
+      <input onChange={handleChange} type="text" value={inputText}  />
     </div>
   );
 }

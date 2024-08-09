@@ -1,0 +1,26 @@
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+footer p {
+  color: rgba(132, 160, 198, .6);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.footer-socials {
+  display: flex;
+  column-gap: .4em;  
+}
+
+.footer-socials a {
+  color: rgba(132, 160, 198, .6);
+  font-size: 1.2rem;
+  transition: .3s;
+}
+
+.footer-socials a:hover {
+  color: #84a0c6;
+}

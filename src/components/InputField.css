@@ -1,0 +1,11 @@
+input {
+	appearance: none;
+	border: none;
+	outline: none;
+	border-bottom: .2em solid #84a0c6;
+	background: rgba(132, 160, 198, .1);
+	border-radius: .2em .2em 0 0;
+  font-size: 1.4rem;
+	padding: .4em;
+	color: #84a0c6;
+}

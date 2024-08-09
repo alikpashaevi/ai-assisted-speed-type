@@ -1,5 +1,4 @@
 .words-component {
-  background: rgba(0, 0, 0, .3);
   padding: 20px 10px;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -13,9 +12,16 @@
 }
   
 .word {
-  padding: 2px 2px;
+  padding: 10px 4px;
+  border-radius: 2px;
 }
 
 .word > span {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
+}
+
+.type-box {
+  height: 100px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, .3);
 }
