@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import './Words.css';
 
 const Words = ({ words, currentIndex, inputError, wordStatus }) => {
-  const [firstRowWords, setFirstRowWords] = useState([]);
 
   
 return (
@@ -32,7 +31,6 @@ return (
                 style={{
                   backgroundColor,
                   color,
-                  fontWeight: index === currentIndex ? 'bold' : 'normal',
                 }}
               >
                 {word.split('').map((letter, i) => (

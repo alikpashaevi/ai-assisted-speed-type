@@ -18,8 +18,11 @@ const MainPage = () => {
   const [correctWords, setCorrectWords] = useState(0);
   const [incorrectWords, setIncorrectWords] = useState(0);
   const [wordStatus, setWordStatus] = useState([]); 
-  const [time, setTime] = useState(290);
+  const [time, setTime] = useState(60);
   const [isTimerRunning, setIsTimerRunning] = useState(false); 
+  const [correctWordList, setCorrectWordList] = useState([]);
+  const [incorrectWordList, setIncorrectWordList] = useState([]);
+
 
   const navigate = useNavigate(); 
 
@@ -33,7 +36,6 @@ const MainPage = () => {
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
   
-
   useEffect(() => {
     let timer;
     if (isTimerRunning && time > 0) {
@@ -41,7 +43,8 @@ const MainPage = () => {
         setTime(time - 1);
       }, 1000);
     } else if (time === 0) {
-      navigate('/timesup', { state: { wpm: 20} });
+      let wpm = Math.round((correctWords / 5) * (60 / 5));
+      navigate('/timesup', { state: { wpm: wpm} });
     }
     return () => clearTimeout(timer);
   }, [isTimerRunning, time, correctWords, incorrectWords, navigate]);
@@ -53,27 +56,62 @@ const MainPage = () => {
   };
 
   const checkWord = (inputWord) => {
-    if (words[currentIndex] === inputWord.trim()) {
+    const currentWord = words[currentIndex];
+    
+    if (currentWord === inputWord.trim()) {
       setCorrectWords((prevCount) => prevCount + 1);
       setInputError(false);
       setWordStatus((prevStatus) => [...prevStatus, 'correct']);
+      setCorrectWordList((prevList) => [...prevList, inputWord.trim()]);
     } else {
       setIncorrectWords((prevCount) => prevCount + 1);
       setInputError(true);
       setWordStatus((prevStatus) => [...prevStatus, 'incorrect']);
+      setIncorrectWordList((prevList) => [...prevList, inputWord.trim()]);
     }
-    setInputError(false);
+  
     setCurrentIndex((prevIndex) => prevIndex + 1);
     setLetterIndex(0); 
   };
 
-  const checkLetter = (inputLetter, isBackspace) => {
+  const compareWords = (correctList, incorrectList) => {
+    let result = [];
+  
+    incorrectList.forEach((word, index) => {
+      let correctWord = words[index];
+      let matchingLetters = 0;
+      let extraLetters = 0;
+      let incorrectLetters = 0;
+  
+      word.split('').forEach((letter, i) => {
+        if (correctWord[i] === letter) {
+          matchingLetters++;
+        } else if (!correctWord.includes(letter)) {
+          extraLetters++;
+        } else {
+          incorrectLetters++;
+        }
+      });
+  
+      result.push({
+        word: word,
+        matchingLetters: matchingLetters,
+        extraLetters: extraLetters,
+        incorrectLetters: incorrectLetters
+      });
+    });
+  
+    return result;
+  };
+  
 
+  const checkLetter = () => {
     startTimer(); 
     const input = document.getElementById('input');
     const inputValue = input.value;
     console.log(inputValue, words[currentIndex]);
     setInputError(!words[currentIndex].startsWith(inputValue));
+
     // let newLetterIndex = letterIndex;
     // console.log(inputLetter, currentIndex, newLetterIndex, words[currentIndex][newLetterIndex]);
     // if (isBackspace) {
@@ -104,6 +142,8 @@ const MainPage = () => {
     setCorrectWords(0);
     setIncorrectWords(0);
     setWordStatus([]);
+    setCorrectWordList([]);
+    setIncorrectWordList([]);
     setTime(60);
     setIsTimerRunning(false);
     fetch('data/words.json')
@@ -114,6 +154,9 @@ const MainPage = () => {
       })
       .catch((error) => console.error('Error fetching data:', error));
   };
+
+  const comparisonResults = compareWords(correctWordList, incorrectWordList);
+
   return (
     <div className='main-page'>
       <Header />
