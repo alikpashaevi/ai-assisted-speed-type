@@ -22,9 +22,15 @@ const MainPage = () => {
   const [isTimerRunning, setIsTimerRunning] = useState(false); 
   const [correctWordList, setCorrectWordList] = useState([]);
   const [incorrectWordList, setIncorrectWordList] = useState([]);
+  const [wordTopPosition, setWordTopPosition] = useState(0)
 
 
   const navigate = useNavigate(); 
+
+
+  const handleWordPositionChange = (top) => {
+    setWordTopPosition(top);
+  };
 
   useEffect(() => {
     fetch('data/words.json')
@@ -43,8 +49,7 @@ const MainPage = () => {
         setTime(time - 1);
       }, 1000);
     } else if (time === 0) {
-      let wpm = Math.round((correctWords / 5) * (60 / 5));
-      navigate('/timesup', { state: { wpm: wpm} });
+      navigate('/timesup', { state: { wpm: Math.round(correctWords / 1)} });
     }
     return () => clearTimeout(timer);
   }, [isTimerRunning, time, correctWords, incorrectWords, navigate]);
@@ -73,16 +78,16 @@ const MainPage = () => {
     setCurrentIndex((prevIndex) => prevIndex + 1);
     setLetterIndex(0); 
   };
-
+  
   const compareWords = (correctList, incorrectList) => {
     let result = [];
-  
+    
     incorrectList.forEach((word, index) => {
       let correctWord = words[index];
       let matchingLetters = 0;
       let extraLetters = 0;
       let incorrectLetters = 0;
-  
+      
       word.split('').forEach((letter, i) => {
         if (correctWord[i] === letter) {
           matchingLetters++;
@@ -92,7 +97,7 @@ const MainPage = () => {
           incorrectLetters++;
         }
       });
-  
+      
       result.push({
         word: word,
         matchingLetters: matchingLetters,
@@ -104,36 +109,36 @@ const MainPage = () => {
     return result;
   };
   
-
+  
   const checkLetter = () => {
     startTimer(); 
     const input = document.getElementById('input');
     const inputValue = input.value;
     console.log(inputValue, words[currentIndex]);
     setInputError(!words[currentIndex].startsWith(inputValue));
-
+    
     // let newLetterIndex = letterIndex;
     // console.log(inputLetter, currentIndex, newLetterIndex, words[currentIndex][newLetterIndex]);
     // if (isBackspace) {
-    //   setLetterIndex((prevIndex) => prevIndex - 1);
-    //   newLetterIndex--;
-    //   return;
-    // }
-    // if (inputLetter === words[currentIndex][newLetterIndex]) {
-    //   setLetterIndex((prevIndex) => prevIndex + 1);
-    //   setInputError(false); 
-    // } else {
-    //   console.log("Incorrect letter");
-    //   setInputError(true); 
-    //   if (newLetterIndex === words[currentIndex].length - 1) {
-    //     // setLetterIndex(0);
-    //     // setInputError(false);
-    //   } else {
-    //     setLetterIndex((prevIndex) => prevIndex + 1);
-    //   }
-    // }
-  };
-
+      //   setLetterIndex((prevIndex) => prevIndex - 1);
+      //   newLetterIndex--;
+      //   return;
+      // }
+      // if (inputLetter === words[currentIndex][newLetterIndex]) {
+        //   setLetterIndex((prevIndex) => prevIndex + 1);
+        //   setInputError(false); 
+        // } else {
+          //   console.log("Incorrect letter");
+          //   setInputError(true); 
+          //   if (newLetterIndex === words[currentIndex].length - 1) {
+            //     // setLetterIndex(0);
+            //     // setInputError(false);
+            //   } else {
+              //     setLetterIndex((prevIndex) => prevIndex + 1);
+              //   }
+              // }
+            };
+            
   const restartFunc = () => {
     setWords([]);
     setCurrentIndex(0);
@@ -147,16 +152,16 @@ const MainPage = () => {
     setTime(60);
     setIsTimerRunning(false);
     fetch('data/words.json')
-      .then((response) => response.json())
-      .then((data) => {
-        const shuffledWords = data.lowercase.sort(() => Math.random() - 0.5);
-        setWords(shuffledWords);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
+    .then((response) => response.json())
+    .then((data) => {
+      const shuffledWords = data.lowercase.sort(() => Math.random() - 0.5);
+      setWords(shuffledWords);
+    })
+    .catch((error) => console.error('Error fetching data:', error));
   };
-
+  
   const comparisonResults = compareWords(correctWordList, incorrectWordList);
-
+  
   return (
     <div className='main-page'>
       <Header />
@@ -167,7 +172,8 @@ const MainPage = () => {
             letterIndex={letterIndex}
             inputError={inputError}
             wordStatus={wordStatus} 
-          />
+            onWordPositionChange={handleWordPositionChange} 
+            />
           <div className="input-area">
             <Timer time={time} />
             <div className="typing-area">

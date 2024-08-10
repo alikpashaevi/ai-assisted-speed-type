@@ -21,7 +21,7 @@ function InputArea({ checkWord, checkLetter }) {
 
   return (
     <div className="form">
-      <input id='input' onChange={handleChange} type="text" value={inputText}  />
+      <input id='input' onChange={handleChange} type="text" value={inputText} autoComplete="off" />
     </div>
   );
 }
