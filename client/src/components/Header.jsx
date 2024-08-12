@@ -8,27 +8,29 @@ import { FaArrowRightFromBracket } from "react-icons/fa6";
 const Header = () => {
   const [username, setUsername] = useState('');
 
+ 
+  const showUsername = async () => {
+    try {
+      const response = await fetch('/api/users');
+
+
+      const data = await response.json();
+      console.log(data);
+      setUsername(data[0].username);
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  };
+
   useEffect(() => {
-    fetch('/users') // Fetch from the correct endpoint
-      .then(response => {
-        if (!response.ok) { // Check if the response is OK (status 200-299)
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.length > 0) {
-          setUsername(data[0].username);
-        }
-      })
-      .catch(error => console.error('Error fetching users:', error));
-  }, []);
+    showUsername();
+  })
   
   return (
     <header>
       <h1><a href="/">EleTypes</a><FaKeyboard /></h1>
       <div className="header-logs">
-        <a href="/profile"><FaUser />{username}</a>
+        <a href="/login"><FaUser /></a>
         <button className='log-out-btn'><FaArrowRightFromBracket /></button>
       </div>
     </header>

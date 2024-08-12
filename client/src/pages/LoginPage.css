@@ -1,0 +1,66 @@
+.orwithline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+  margin: 10px 0;
+}
+
+.line {
+  height: .2em;
+  background-color: var(--color-third);
+  border-radius: 1px;
+}
+
+.text {
+  color: var(--color-third);
+  font-size: 1.4rem;
+}
+
+.login-title {
+  color: var(--color-third);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.oauth-login {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+p {
+  color: white;
+  opacity: .7;
+  font-size: 1rem;  
+}
+.oauth-login > a {
+  padding: 8px 36px;
+  background: rgba(132, 160, 198, .1);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-third);
+  display: flex;
+  align-items: center;
+  transition: .3s;
+}
+
+.oauth-login > a:hover {
+  background-color: var(--color-third);
+  color: var(--primary-color);
+}
+
+.signup-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.signup-div > a {
+  color: var(--color-third);
+  text-decoration: none;
+
+}
+
+
