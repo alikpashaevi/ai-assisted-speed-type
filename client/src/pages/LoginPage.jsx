@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom';
 import LoginForm from '../components/LoginForm'
 import Header from '../components/Header'
 import { FaGoogle } from "react-icons/fa6";
@@ -20,7 +21,7 @@ export const LoginPage = () => {
         </div>
         <LoginForm />
         <div className="signup-div">
-          <p className='no-account-text'>don't have an account?</p><a href="/register">Sign up</a>
+          <p className='no-account-text'>don't have an account?</p><Link to="/register">Sign up</Link>
         </div>
       </div>
     </main>

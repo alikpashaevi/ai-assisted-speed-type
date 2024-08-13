@@ -4,6 +4,8 @@ import pg from "pg";
 import env from "dotenv";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import passport from "passport";
+import LocalStrategy from "passport-local";
 
 const app = express();
 const port = 3000;
@@ -89,6 +91,29 @@ app.post("/register", async (req, res) => {
     res.status(500).send('Internal Server Error');
     }
 })
+
+// passport.use(
+//   new LocalStrategy(async (username, password, done) => {
+//     try {
+//       const result = await db.query("SELECT * FROM user_info WHERE username = $1", [username]);
+//       if (result.rows.length === 0) {
+//         return done(null, false, { message: "Incorrect username" });
+//       }
+//       const user = result.rows[0];
+//       bcrypt.compare(password, user.password, (err, result) => {
+//         if (err) {
+//           return done(err);
+//         }
+//         if (!result) {
+//           return done(null, false, { message: "Incorrect password" });
+//         }
+//         return done(null, user);
+//       });
+//     } catch (err) {
+//       return done(err);
+//     }
+//   })
+// );
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

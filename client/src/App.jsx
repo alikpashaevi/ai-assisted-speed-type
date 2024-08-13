@@ -4,6 +4,7 @@ import MainPage from './pages/MainPage';
 import TimesUpPage from './pages/TimesUpPage'; // Import the new page
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
+import ProfilePage from './pages/ProfilePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -11,6 +12,7 @@ const router = createBrowserRouter(
       <Route path='/' element={<MainPage />} />
       <Route path = '/login' element={<LoginPage />} />
       <Route path = '/register' element={<SignupPage />} />
+      <Route path = '/profile' element={<ProfilePage />} />
       <Route path='/timesup' element={<TimesUpPage />} /> {/* Add this route */}
     </>
   )

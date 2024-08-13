@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import { FaGoogle } from "react-icons/fa6";
 import './SignupPage.css'
 import SignupForm from '../components/SignupForm';
+import { Link } from 'react-router-dom';
 
 export const SignupPage = () => {
   return (
@@ -21,7 +22,7 @@ export const SignupPage = () => {
           </div>
           <SignupForm />
           <div className="signup-div">
-            <p className='no-account-text'>Already have an account?</p><a href="/login">Login</a>
+            <p className='no-account-text'>Already have an account?</p><Link to="/login">Login</Link>
           </div>
         </div>
       </main>
