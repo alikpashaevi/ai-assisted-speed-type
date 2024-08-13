@@ -6,7 +6,8 @@ import './LoginPage.css'
 
 export const LoginPage = () => {
   return (
-    <Fragment>
+    <main>
+      <Header />
       <div className='login-container'>
         <h1 className='login-title'>Login</h1>
         <div className="oauth-login">
@@ -22,6 +23,6 @@ export const LoginPage = () => {
           <p className='no-account-text'>don't have an account?</p><a href="/register">Sign up</a>
         </div>
       </div>
-    </Fragment>
+    </main>
   )
 }

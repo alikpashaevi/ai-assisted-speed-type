@@ -5,6 +5,7 @@ main {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  row-gap: 60px;
 }
 
 .signup-title {

@@ -12,8 +12,6 @@ const Header = () => {
   const showUsername = async () => {
     try {
       const response = await fetch('/api/users');
-
-
       const data = await response.json();
       console.log(data);
       setUsername(data[0].username);
