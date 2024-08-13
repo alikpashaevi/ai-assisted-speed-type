@@ -4,14 +4,41 @@ import pg from "pg";
 import env from "dotenv";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import session from "express-session";
+import passport from "passport";
+import { Strategy } from "passport-local";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(express.static(path.join(__dirname, 'build')));
 env.config();
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.redirect('/login');
+  }
+}
 
 const db = new pg.Client({
   user: process.env.PG_USER,
@@ -23,6 +50,10 @@ const db = new pg.Client({
 
 db.connect();
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.get('/users', async (req, res) => {
   try {
     let result = await db.query("SELECT * FROM user_info");
@@ -33,36 +64,19 @@ app.get('/users', async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const checkResult = await db.query("SELECT * FROM user_info WHERE username = $1", [username]);
-
-    if (checkResult.rows.length === 0) {
-      return res.status(404).send("This username doesn't exist.");
-    } else {
-      console.log("loginPassword:", password);
-      console.log("Hashed password from DB:", checkResult.rows[0].password);
-      // Compare the provided password with the hashed password
-      
-      bcrypt.compare(password, checkResult.rows[0].password, (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send("Internal Server Error");
-        }
-        if (!result) {
-          return res.status(401).send("Wrong password. Please try again!");
-        } else {
-          return res.status(200).send("Login successful");
-        }
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal Server Error');
+app.get('/profile',ensureAuthenticated, (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.redirect('/login');
   }
 });
+
+app.post("/login", passport.authenticate("local", {
+  successRedirect: "/profile",
+  failureRedirect: "/login",
+  failureFlash: true,
+}));
 
 
 app.post("/register", async (req, res) => {
@@ -89,6 +103,48 @@ app.post("/register", async (req, res) => {
     res.status(500).send('Internal Server Error');
     }
 })
+
+passport.use(new Strategy(async function verify(username, password, cb) {
+  console.log("username", username);
+
+  try {
+    const checkResult = await db.query("SELECT * FROM user_info WHERE username = $1", [username]);
+    const user = checkResult.rows[0];
+    const storedHashedPassword = user.password;
+    if (checkResult.rows.length === 0) {
+      return res.status(404).send("This username doesn't exist.");
+    } else {
+      console.log("loginPassword:", password);
+      console.log("Hashed password from DB:", storedHashedPassword);
+      // Compare the provided password with the hashed password
+      
+      bcrypt.compare(password, storedHashedPassword, (err, result) => {
+        if (err) {
+          return cb(err);
+        }
+        if (!result) {
+          return cb(null, false, { message: 'Incorrect password.' });
+        } else {
+          return cb(null, checkResult.rows[0]);
+        }
+      });
+    }
+  } catch (err) {
+    return cb('user not found')
+  }
+}));
+
+passport.serializeUser((user, cb) => {
+  process.nextTick(() => {
+    cb(null, { id: user.id, username: user.username });
+  });
+});
+
+passport.deserializeUser((user, cb) => {
+  process.nextTick(() => {
+    return cb(null, user);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

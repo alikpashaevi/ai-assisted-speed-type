@@ -28,7 +28,7 @@ const Header = () => {
     <header>
       <h1><a href="/">EleTypes</a><FaKeyboard /></h1>
       <div className="header-logs">
-        <a href="/login"><FaUser /></a>
+        <a href="/profile"><FaUser /></a>
         <button className='log-out-btn'><FaArrowRightFromBracket /></button>
       </div>
     </header>
