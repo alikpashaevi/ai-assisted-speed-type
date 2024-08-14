@@ -8,27 +8,33 @@ import { FaArrowRightFromBracket } from "react-icons/fa6";
 const Header = () => {
   const [username, setUsername] = useState('');
 
- 
-  const showUsername = async () => {
-    try {
-      const response = await fetch('/api/users');
-      const data = await response.json();
-      console.log(data);
-      setUsername(data[0].username);
-    } catch (error) {
-      console.error('Error fetching username:', error);
-    }
-  };
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:3000/profile', {
+  //         method: 'GET',
+  //         credentials: 'include', // Include credentials (cookies) with the request
+  //       });
 
-  useEffect(() => {
-    showUsername();
-  })
-  
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setUsername(data.username);
+  //       } else {
+  //         console.log('Failed to fetch profile');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching profile:', error);
+  //     }
+  //   };
+
+  //   fetchProfile();
+  // }, []);
+
   return (
     <header>
       <h1><a href="/">EleTypes</a><FaKeyboard /></h1>
       <div className="header-logs">
-        <a href="/login"><FaUser /></a>
+        <a href="/login"><FaUser /> {username ? username : 'Login'}</a>
         <button className='log-out-btn'><FaArrowRightFromBracket /></button>
       </div>
     </header>

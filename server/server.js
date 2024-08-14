@@ -22,7 +22,9 @@ app.use(
     secret: process.env.SESSION_SECRET, // Use a secret key from your .env file
     resave: false, // Don't save session if unmodified
     saveUninitialized: false, // Don't create session until something is stored
-    cookie: { secure: false }, // Set to true if using HTTPS
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // Session expires after 24 hours
+    }, // Set to true if using HTTPS
   })
 );
 
@@ -70,9 +72,9 @@ app.post("/login", (req, res, next) => {
 
 app.get('/profile', (req, res) => {
   if (req.isAuthenticated()) {
-    res.send(`Welcome, ${req.user.username}! This is your profile.`);
+    console.log(`Welcome, ${req.user.username}! This is your profile.`);
   } else {
-    res.status(401).send('Please log in to view this page.');
+    console.log("You are not logged in.");
   }
 });
 
@@ -92,8 +94,16 @@ app.post("/register", async (req, res) => {
         if (err) {
           console.log("Error password hashing", err);
         } else {
-          await db.query("INSERT INTO user_info (username, password) VALUES ($1, $2)", [username, hash]);
+          const result = await db.query("INSERT INTO user_info (username, password) VALUES ($1, $2) RETURNING *", [username, hash]);
           res.status(201).send("User registered successfully");
+          const user = result.rows[0];
+          req.login(user, (err) => {
+            if (err) {
+              console.log("Error logging in user", err);
+            } else {
+              res.redirect("/profile");
+            }
+            });
         }
       });
     }
@@ -131,7 +141,7 @@ passport.use(
 
 // Serialize and deserialize user info for sessions
 passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+  cb(null, user.username);
 });
 
 passport.deserializeUser(async (id, cb) => {
