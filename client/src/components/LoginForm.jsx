@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
 import './LoginForm.css';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // For displaying messages to the user
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Use useNavigate for navigation
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,16 +19,15 @@ const LoginForm = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.text();
-      setMessage(data);
+      const data = await response.json();
 
       if (response.ok) {
-        // Handle successful login, e.g., redirect or show a success message
-        console.log('Login successful');
-        window.location.href = '/';
+        // Handle successful login
+        setMessage("Login successful");
+        navigate(data.redirectUrl); // Redirect to profile page
       } else {
         // Handle error response
-        console.log('Login failed');
+        setMessage(data.message || 'Login failed');
       }
     } catch (err) {
       console.error(err.message);
