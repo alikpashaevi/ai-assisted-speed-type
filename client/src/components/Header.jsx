@@ -11,7 +11,12 @@ const Header = () => {
  
   const showUsername = async () => {
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const data = await response.json();
       console.log(data);
       setUsername(data[0].username);

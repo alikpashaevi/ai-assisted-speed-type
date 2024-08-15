@@ -4,8 +4,7 @@ import pg from "pg";
 import env from "dotenv";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import passport from "passport";
-import LocalStrategy from "passport-local";
+import jwt from "jsonwebtoken";
 
 const app = express();
 const port = 3000;
@@ -55,10 +54,16 @@ app.post("/login", async (req, res) => {
         }
         if (!result) {
           return res.status(401).send("Wrong password. Please try again!");
-        } else {
-          return res.status(200).send("Login successful");
-        }
+        } 
       });
+      const token = jwt.sign({ id: checkResult.rows[0].id }, process.env.JWT_SECRET, {
+        expiresIn: "1d"
+      });
+      res.status(200).send({
+        id: checkResult.rows[0].id,
+        name: checkResult.rows[0].name,
+        accessToken: token,
+    });
     }
   } catch (err) {
     console.log(err);
