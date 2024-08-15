@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FaUserCircle } from "react-icons/fa";
+import './UserCard.css'
 
 const Usercard = () => {
   const [username, setUsername] = useState('');
@@ -29,12 +30,13 @@ const Usercard = () => {
     <div className='user-info'>
       <div className='img-username'>
         <FaUserCircle className='user-icon' />
-        <h3 className="username">{username}</h3>        
+        <h3 className="username">alik{username}</h3>        
       </div>
+      <h3 className='highest-wpm-h3'>Your highest WPM</h3>
       <div className='top-score-div'>
-        <div className="top-score"><span>15 seconds</span><span>60wpm</span></div>
-        <div className="top-score"><span>30 seconds</span><span>60wpm</span></div>
-        <div className="top-score"><span>60 seconds</span><span>60wpm</span></div>
+        <div className="top-score"><span className='top-score-time'>15 seconds</span><span className='top-score-score'>60</span></div>
+        <div className="top-score"><span className='top-score-time'>30 seconds</span><span className='top-score-score'>60</span></div>
+        <div className="top-score"><span className='top-score-time'>60 seconds</span><span className='top-score-score'>60</span></div>
       </div>
     </div>
   )

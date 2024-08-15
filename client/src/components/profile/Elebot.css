@@ -1,0 +1,49 @@
+.elebot-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 20px;
+  padding: 20px 20px;
+}
+
+.elebot-herself > img {
+  height: 100px;
+}
+
+.elebot-container > p {
+  font-size: 1.2rem;
+  color: rgba(132, 160, 198, .7);
+  background-color: rgba(132, 160, 198, .1);
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+/* .elebot-container > p::before {
+  content: '';
+  height: 40px;
+  width: 40px;
+  background-color: white;
+  position: absolute;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(-20deg);
+  left: -20px;
+  top: 40px;
+} */
+
+.elebot-herself {
+  animation: float 2.5s infinite;
+}
+
+@keyframes float 
+{
+  0% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-10px);
+  }
+  100% {
+    transform: translatey(0px);
+  }
+}
