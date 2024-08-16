@@ -23,7 +23,6 @@ const LoginForm = () => {
       if (response.ok) {
         // Handle successful login, e.g., redirect or show a success message
         console.log('Login successful');
-        window.location.href = '/';
       } else {
         // Handle error response
         console.log('Login failed');
