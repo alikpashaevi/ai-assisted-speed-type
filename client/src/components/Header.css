@@ -3,7 +3,7 @@ header {
   width: 100%;
   justify-content: space-around;
   position: fixed;
-  top: 50px;
+  top: 30px;
 }
 
 header > h1 {
