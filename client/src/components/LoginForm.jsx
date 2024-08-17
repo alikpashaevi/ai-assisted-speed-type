@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(''); // For displaying messages to the user
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +25,10 @@ const LoginForm = () => {
       if (response.ok) {
         // Handle successful login, e.g., redirect or show a success message
         console.log('Login successful');
+        if (response.ok) {
+          localStorage.setItem('token', data.accessToken); // Store the token
+          navigate('/profile'); // Redirect to the ProfilePage
+          }
       } else {
         // Handle error response
         console.log('Login failed');

@@ -25,14 +25,35 @@ const db = new pg.Client({
 db.connect();
 
 app.get('/users', async (req, res) => {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).send('Access Denied: No Token Provided!');
+  }
+
+  const tokenWithoutBearer = token.split(' ')[1]; // Remove "Bearer" from the token
+
   try {
-    let result = await db.query("SELECT * FROM user_info");
-    res.json(result.rows);
+    const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    const userId = verified.id;
+    console.log(userId);
+    
+    // Fetch the user by ID from the database
+    const userResult = await db.query("SELECT username FROM user_info WHERE id = $1", [userId]);
+    
+    if (userResult.rows.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+    
+    const user = userResult.rows[0];
+    res.json({ username: user.username });
+    
   } catch (error) {
     console.log(error);
-    res.status(500).send('Internal Server Error');
+    res.status(400).send('Invalid Token');
   }
 });
+
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;

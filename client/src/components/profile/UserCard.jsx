@@ -8,29 +8,38 @@ const Usercard = () => {
 
   const showUsername = async () => {
     try {
+      const token = localStorage.getItem('token'); // Get the token from localStorage
       const response = await fetch('http://localhost:3000/users', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Add "Bearer" before the token
         },
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+  
       const data = await response.json();
       console.log(data);
-      setUsername(data[0].username);
+      setUsername(data.username); // Set the fetched username
     } catch (error) {
       console.error('Error fetching username:', error);
     }
   };
+  
+  
 
   useEffect(() => {
     showUsername();
-  })
+  }, []); // Add empty dependency array to avoid infinite loop
 
   return (
     <div className='user-info'>
       <div className='img-username'>
         <FaUserCircle className='user-icon' />
-        <h3 className="username">alik{username}</h3>        
+        <h3 className="username">{username}</h3>        
       </div>
       <h3 className='highest-wpm-h3'>Your highest WPM</h3>
       <div className='top-score-div'>
@@ -42,4 +51,4 @@ const Usercard = () => {
   )
 }
 
-export default Usercard
+export default Usercard;

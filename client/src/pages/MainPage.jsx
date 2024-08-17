@@ -28,6 +28,7 @@ const MainPage = () => {
   const [timeLimit, setTimeLimit] = useState(60);
   const [contentType, setContentType] = useState('default');
   const [divisionVar, setDivisionVar] = useState(1);
+  const [resetWords, setResetWords] = useState(false);
 
   const navigate = useNavigate(); 
 
@@ -175,8 +176,13 @@ const MainPage = () => {
     setIncorrectWordList([]);
     setTime(timeLimit);
     setIsTimerRunning(false);
+    setResetWords(true);
     fetchWords();
   };
+
+  useEffect(() => {
+    setResetWords(false); // Reset the flag after restart
+  }, [resetWords]);
   
   const comparisonResults = compareWords(correctWordList, incorrectWordList);
   
@@ -202,6 +208,7 @@ const MainPage = () => {
             inputError={inputError}
             wordStatus={wordStatus} 
             onWordPositionChange={handleWordPositionChange} 
+            reset={resetWords}
             />
           <div className="input-area">
             <Timer time={time} />
