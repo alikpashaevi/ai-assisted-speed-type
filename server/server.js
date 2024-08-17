@@ -82,7 +82,7 @@ app.post("/login", async (req, res) => {
       });
       res.status(200).send({
         id: checkResult.rows[0].id,
-        name: checkResult.rows[0].name,
+        name: checkResult.rows[0].username,
         accessToken: token,
     });
     }

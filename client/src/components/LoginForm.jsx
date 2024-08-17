@@ -19,10 +19,10 @@ const LoginForm = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.text();
-      setMessage(data);
-
       if (response.ok) {
+        const data = await response.json();
+        setMessage(data);
+        
         // Handle successful login, e.g., redirect or show a success message
         console.log('Login successful');
         if (response.ok) {
@@ -30,7 +30,7 @@ const LoginForm = () => {
           navigate('/profile'); // Redirect to the ProfilePage
           }
       } else {
-        // Handle error response
+        setMessage('Invalid username or password');
         console.log('Login failed');
       }
     } catch (err) {

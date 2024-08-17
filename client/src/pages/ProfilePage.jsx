@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../components/Header'
 import Usercard from '../components/profile/UserCard'
 import './ProfilePage.css'
@@ -7,10 +7,29 @@ import Progress from '../components/profile/Progress'
 import { useState } from 'react'
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
+import { useNavigate } from 'react-router-dom'
 
 Chart.register(CategoryScale);
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+ 
+  const checkToken = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+          navigate('/login');
+          return;
+      }
+      } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  };
+
+  useEffect(() => {
+    checkToken();
+  })
+
   const [chartData, setChartData] = useState( {
     labels: ['2016', '2017', '2018', '2019', '2020'], // Labels for the x-axis
     datasets: [
