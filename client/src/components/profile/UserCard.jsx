@@ -28,8 +28,33 @@ const Usercard = () => {
       console.error('Error fetching username:', error);
     }
   };
+
+  const showTopScore = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from localStorage
+      const response = await fetch('http://localhost:3000/wpm', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Add "Bearer" before the token
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setTopScore(data); // Set the fetched username
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  };
   
-  
+  useEffect(() => {
+    showTopScore();
+  }, []); // Add empty dependency array to avoid infinite loop
 
   useEffect(() => {
     showUsername();
@@ -43,9 +68,9 @@ const Usercard = () => {
       </div>
       <h3 className='highest-wpm-h3'>Your highest WPM</h3>
       <div className='top-score-div'>
-        <div className="top-score"><span className='top-score-time'>15 seconds</span><span className='top-score-score'>60</span></div>
-        <div className="top-score"><span className='top-score-time'>30 seconds</span><span className='top-score-score'>60</span></div>
-        <div className="top-score"><span className='top-score-time'>60 seconds</span><span className='top-score-score'>60</span></div>
+        <div className="top-score"><span className='top-score-time'>15 seconds</span><span className='top-score-score'>{topScore}</span></div>
+        <div className="top-score"><span className='top-score-time'>30 seconds</span><span className='top-score-score'>{topScore}</span></div>
+        <div className="top-score"><span className='top-score-time'>60 seconds</span><span className='top-score-score'>{topScore}</span></div>
       </div>
     </div>
   )

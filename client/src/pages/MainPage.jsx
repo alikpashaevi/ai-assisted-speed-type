@@ -64,8 +64,6 @@ const MainPage = () => {
     fetchWords();
   }, [contentType, mode]);
   
-
-  
   const fetchWords = () => {
     fetch('data/words.json')
       .then((response) => response.json())
@@ -77,15 +75,33 @@ const MainPage = () => {
           wordList = data.normalWords;
         } else if (mode === 'hard') {
           wordList = data.hardWords;
-        } else if (contentType === 'punctuation') {
-          wordList = data.punctuation;
+        } 
+
+        if (contentType === 'punctuation') {
+          wordList = wordList.concat(data.punctuation);
         } else if (contentType === 'numbers') {
-          // wordList = numberMix;
+          wordList = wordList.concat(data.numbers);
         }
+
         const shuffledWords = wordList.sort(() => Math.random() - 0.5);
-        setWords(shuffledWords);
+        setWords(formatWordsWithPunctuation(shuffledWords));
       })
       .catch((error) => console.error('Error fetching data:', error));
+  };
+
+  const formatWordsWithPunctuation = (wordList) => {
+    if (contentType === 'punctuation') {
+      return wordList.map((word, index) => {
+        if (index > 0) {
+          const previousWord = wordList[index - 1];
+          if (/[.!?]$/.test(previousWord)) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }
+        }
+        return word;
+      });
+    }
+    return wordList;
   };
 
   useEffect(() => {
@@ -185,6 +201,7 @@ const MainPage = () => {
   }, [resetWords]);
   
   const comparisonResults = compareWords(correctWordList, incorrectWordList);
+  // console.log("Comparison Results:", comparisonResults);
   
   return (
     <div className='main-page'>

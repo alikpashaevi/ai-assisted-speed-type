@@ -1,16 +1,20 @@
 import React, {useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
+import Header from '../components/Header';
 
 const TimesUpPage = () => {
   const location = useLocation();
   const { wpm } = location.state || {}; 
 
+  console.log('WPM:', typeof(wpm));
   const sendWpmToServer = async () => {
     try {
+      console.log(JSON.stringify({ wpm })); // Log what you're sending to the server
       const response = await fetch('http://localhost:3000/wpm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({ wpm }),
       });
@@ -24,6 +28,7 @@ const TimesUpPage = () => {
       console.error('Error:', error);
     }
   };
+  
 
   useEffect(() => {
     if (wpm) {
@@ -33,6 +38,7 @@ const TimesUpPage = () => {
 
   return (
     <div>
+      <Header />
       <h1>Time's Up!</h1>
       <p>Your typing session has ended.</p>
       <p>Your WPM (Words Per Minute): {wpm}</p>
