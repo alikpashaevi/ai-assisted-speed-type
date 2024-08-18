@@ -28,6 +28,7 @@ const MainPage = () => {
   const [timeLimit, setTimeLimit] = useState(60);
   const [contentType, setContentType] = useState('default');
   const [divisionVar, setDivisionVar] = useState(1);
+  const [resetWords, setResetWords] = useState(false);
 
   const navigate = useNavigate(); 
 
@@ -63,8 +64,6 @@ const MainPage = () => {
     fetchWords();
   }, [contentType, mode]);
   
-
-  
   const fetchWords = () => {
     fetch('data/words.json')
       .then((response) => response.json())
@@ -76,15 +75,33 @@ const MainPage = () => {
           wordList = data.normalWords;
         } else if (mode === 'hard') {
           wordList = data.hardWords;
-        } else if (contentType === 'punctuation') {
-          wordList = data.punctuation;
+        } 
+
+        if (contentType === 'punctuation') {
+          wordList = wordList.concat(data.punctuation);
         } else if (contentType === 'numbers') {
-          // wordList = numberMix;
+          wordList = wordList.concat(data.numbers);
         }
+
         const shuffledWords = wordList.sort(() => Math.random() - 0.5);
-        setWords(shuffledWords);
+        setWords(formatWordsWithPunctuation(shuffledWords));
       })
       .catch((error) => console.error('Error fetching data:', error));
+  };
+
+  const formatWordsWithPunctuation = (wordList) => {
+    if (contentType === 'punctuation') {
+      return wordList.map((word, index) => {
+        if (index > 0) {
+          const previousWord = wordList[index - 1];
+          if (/[.!?]$/.test(previousWord)) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }
+        }
+        return word;
+      });
+    }
+    return wordList;
   };
 
   useEffect(() => {
@@ -175,10 +192,16 @@ const MainPage = () => {
     setIncorrectWordList([]);
     setTime(timeLimit);
     setIsTimerRunning(false);
+    setResetWords(true);
     fetchWords();
   };
+
+  useEffect(() => {
+    setResetWords(false); // Reset the flag after restart
+  }, [resetWords]);
   
   const comparisonResults = compareWords(correctWordList, incorrectWordList);
+  // console.log("Comparison Results:", comparisonResults);
   
   return (
     <div className='main-page'>
@@ -202,6 +225,7 @@ const MainPage = () => {
             inputError={inputError}
             wordStatus={wordStatus} 
             onWordPositionChange={handleWordPositionChange} 
+            reset={resetWords}
             />
           <div className="input-area">
             <Timer time={time} />

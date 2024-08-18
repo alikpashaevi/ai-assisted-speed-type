@@ -25,14 +25,94 @@ const db = new pg.Client({
 db.connect();
 
 app.get('/users', async (req, res) => {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).send('Access Denied: No Token Provided!');
+  }
+
+  const tokenWithoutBearer = token.split(' ')[1]; // Remove "Bearer" from the token
+
   try {
-    let result = await db.query("SELECT * FROM user_info");
-    res.json(result.rows);
+    const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    const userId = verified.id;
+    
+    // Fetch the user by ID from the database
+    const userResult = await db.query("SELECT username FROM user_info WHERE id = $1", [userId]);
+    
+    if (userResult.rows.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+    
+    const user = userResult.rows[0];
+    res.json({ username: user.username });
+    
   } catch (error) {
     console.log(error);
-    res.status(500).send('Internal Server Error');
+    res.status(400).send('Invalid Token');
   }
 });
+
+app.get('/wpm', async (req, res) => {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.sendStatus(401).send('Access Denied: No Token Provided!');
+  }
+  const tokenWithoutBearer = token.split(' ')[1]; // Remove "Bearer" from the token
+  try {
+    const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    const userId = verified.id;
+
+    const highestWpmResult = await db.query("SELECT MAX(wpm_value) FROM wpm WHERE user_id = $1", [userId]);
+    
+    const maxWpm = highestWpmResult.rows[0].max;
+
+    // If maxWpm is null, provide a default value or message
+    if (maxWpm === null || maxWpm === undefined) {
+      return res.status(200).send('No WPM record found');
+    }
+
+    res.status(200).send(String(maxWpm)); // Ensure the response is a string or number
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400).send('Invalid Token');
+  }
+});
+
+
+app.post("/wpm", async (req, res) => {
+  const wpm = req.body.wpm;
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).send('Access Denied: No Token Provided!');
+  }
+
+  const tokenWithoutBearer = token.split(' ')[1]; // Remove "Bearer" from the token
+  
+  try {
+    const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    const userId = verified.id;
+
+    // Fetch the user by ID from the database
+    const userResult = await db.query("SELECT username FROM user_info WHERE id = $1", [userId]);
+
+    if (userResult.rows.length === 0) {
+      console.error('User not found');
+      return res.status(404).send('User not found.');
+    }
+
+    // Insert the WPM value into the database
+    await db.query("INSERT INTO wpm (user_id, wpm_value) VALUES ($1, $2)", [userId, wpm]);
+
+    res.status(200).send('WPM saved successfully');
+  } catch (error) {
+    console.error('Error during WPM saving:', error);
+    res.status(400).send('Invalid Token');
+  }
+});
+
+
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -61,7 +141,7 @@ app.post("/login", async (req, res) => {
       });
       res.status(200).send({
         id: checkResult.rows[0].id,
-        name: checkResult.rows[0].name,
+        name: checkResult.rows[0].username,
         accessToken: token,
     });
     }
