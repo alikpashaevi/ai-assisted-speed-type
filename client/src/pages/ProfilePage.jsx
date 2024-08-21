@@ -31,7 +31,7 @@ const ProfilePage = () => {
   })
 
   const [chartData, setChartData] = useState( {
-    labels: ['2016', '2017', '2018', '2019', '2020'], // Labels for the x-axis
+    labels: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'], // Labels for the x-axis
     datasets: [
       {
         label: 'WPM',
